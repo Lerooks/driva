@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum JobStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+enum RegistrationStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Email {
+  id          String   @id @default(cuid())
+  address     String   @db.VarChar(255)
+  isValid     Boolean?
+  company     Company  @relation(fields: [companyCnpj], references: [cnpj])
+  companyCnpj String
+
+  @@unique([address, companyCnpj])
+  @@map("emails")
+}
+
+model Phone {
+  id          String   @id @default(cuid())
+  number      String   @db.VarChar(32)
+  isValid     Boolean?
+  company     Company  @relation(fields: [companyCnpj], references: [cnpj])
+  companyCnpj String
+
+  @@unique([number, companyCnpj])
+  @@map("phones")
+}
+
+model Company {
+  cnpj                String              @id @db.VarChar(14)
+  corporateName       String              @db.VarChar(255)
+  city                String              @db.VarChar(100)
+  segment             String              @db.VarChar(100)
+  registrationStatus  RegistrationStatus
+  updatedAt           DateTime            @updatedAt
+  emails              Email[]
+  phones              Phone[]
+  enrichmentCompanies EnrichmentCompany[]
+
+  @@map("companies")
+}
+
+model Enrichment {
+  id                  String              @id @default(cuid())
+  jobId               String              @db.Uuid
+  status              JobStatus
+  completedAt         DateTime?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  enrichmentCompanies EnrichmentCompany[]
+
+  @@map("enrichments")
+}
+
+model EnrichmentCompany {
+  id           String     @id @default(cuid())
+  enrichment   Enrichment @relation(fields: [enrichmentId], references: [id])
+  enrichmentId String
+  company      Company    @relation(fields: [companyCnpj], references: [cnpj])
+  companyCnpj  String
+  updatedAt    DateTime   @updatedAt
+  status       JobStatus  @default(PENDING)
+
+  @@unique([enrichmentId, companyCnpj])
+  @@map("enrichment_companies")
+}

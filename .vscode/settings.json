@@ -1,0 +1,12 @@
+{
+  "editor.formatOnSave": true,
+  "eslint.format.enable": true,
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma",
+    "editor.formatOnSave": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  }
+}

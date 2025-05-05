@@ -1,0 +1,114 @@
+###Exemplo de Input e Output
+
+#Input para iniciar um enriquecimento:
+
+{
+  "cnpjs": [
+    "27865757000102",
+    "21597578000150",
+    "04612344000199",
+    ...
+  ],
+}
+
+#Retorno esperado:
+
+{
+  "job_id": "b1e4e28c-4d1d-4c8a-97c7-3fbb2639b3dd",
+  "total_companies": 3,
+  "created_at": "2025-04-30T12:01:27Z",
+}
+
+#Consulta de enriquecimento rodando:
+GET /enriquecimentos/b1e4e28c-4d1d-4c8a-97c7-3fbb2639b3dd HTTP/1.1
+
+#Retorno da consulta de enriquecimento rodando:
+{
+  "job_id": "b1e4e28c-4d1d-4c8a-97c7-3fbb2639b3dd",
+  "status": "EM_ANDAMENTO",
+  "progress": 0.42,                // 42 %
+  "totals": {
+    "companies": 3,
+    "completed": 1,
+    "failed": 0,
+    "pending": 2
+  },
+  "last_update": "2025-04-30T12:15:08Z"
+}
+
+#Retorno de consulta finalizada
+
+{
+  "job_id": "b1e4e28c-4d1d-4c8a-97c7-3fbb2639b3dd",
+  "status": "CONCLUÍDO",
+  "progress": 1.0,
+  "totals": {
+    "companies": 3,
+    "completed": 3,
+    "failed": 0,
+    "pending": 0
+  },
+  "results_url": "https://api.driva.local/enriquecimentos/b1e4e28c-4d1d-4c8a-97c7-3fbb2639b3dd/result"
+}
+
+#Consulta de enriquecimento finalizado:
+GET enriquecimentos/b1e4e28c-4d1d-4c8a-97c7-3fbb2639b3dd/result
+
+# Retorno de enriquecimento finalizado:
+
+{
+  "job_id": "b1e4e28c-4d1d-4c8a-97c7-3fbb2639b3dd",
+  "created_at": "2025-04-30T12:01:27Z",
+  "completed_at": "2025-04-30T12:45:12Z",
+  "totals": {
+    "companies": 3,
+    "completed": 3,
+    "failed": 0,
+  },
+  "items": [
+    {
+      "cnpj": "27865757000102",
+      "razao_social": "DRIVA TECNOLOGIA LTDA",
+      "municipio": "SÃO PAULO",
+      "segmento": "TECH",
+      "situacao_cadastral": "ATIVA",
+      "updated_at": "2025-04-30T12:17:02Z",
+      "telefones": [
+        { "numero": "+55 11 4000-1234",   "valido": true  },
+        { "numero": "+55 11 91234-5678", "valido": true  }
+      ],
+      "emails": [
+        { "email": "contato@driva.com.br", "valido": true  },
+        { "email": "info@driver.com",      "valido": false }
+      ]
+    },
+    {
+      "cnpj": "21597578000150",
+      "razao_social": "AGRO INSUMOS BRASIL S.A.",
+      "municipio": "CURITIBA",
+      "segmento": "AGRONEGÓCIO",
+      "situacao_cadastral": "ATIVA",
+      "updated_at": "2025-04-30T12:23:09Z",
+      "telefones": [
+        { "numero": "+55 41 3333-2222", "valido": true }
+      ],
+      "emails": [
+        { "email": "suporte@agroinsumos.com.br", "valido": true }
+      ]
+    },
+    {
+      "cnpj": "04612344000199",
+      "razao_social": "NUTRI FARMS LTDA",
+      "municipio": "RIBEIRÃO PRETO",
+      "segmento": "AGROTECH",
+      "situacao_cadastral": "ATIVA",
+      "updated_at": "2025-04-30T12:31:47Z",
+      "telefones": [
+        { "numero": "+55 16 4009-0000", "valido": false }
+      ],
+      "emails": [
+        { "email": "vendas@nutrifarms.com", "valido": true }
+      ]
+    }
+  ]
+}
